@@ -1,4 +1,4 @@
-package org.example;
+package org.mallegolhansen.philip.WyCash;
 
 public class App {
     public String getGreeting() {
