@@ -1,7 +1,7 @@
 package org.mallegolhansen.philip.WyCash;
 
 public class Dollar {
-    int amount;
+    private int amount;
 
     Dollar(int amount) {
         this.amount = amount;
