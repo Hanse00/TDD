@@ -18,8 +18,8 @@ public class Money {
     }
 
     Money times(int multiplier) {
-        return null;
-    };
+        return new Money(amount * multiplier, currency);
+    }
 
     String currency() {
         return currency;
