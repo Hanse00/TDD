@@ -25,6 +25,10 @@ public class Money implements Expression {
         return new Sum(this, addend);
     }
 
+    public Money reduce(String to) {
+        return this;
+    }
+
     String currency() {
         return currency;
     }
