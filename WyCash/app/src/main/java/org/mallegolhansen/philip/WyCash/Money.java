@@ -12,6 +12,11 @@ public abstract class Money {
         return new Franc(amount, "CHF");
     }
 
+    Money(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
     abstract Money times(int multiplier);
 
     String currency() {
