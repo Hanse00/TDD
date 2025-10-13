@@ -1,6 +1,6 @@
 package org.mallegolhansen.philip.WyCash;
 
-public abstract class Money {
+public class Money {
     protected int amount;
     protected String currency;
 
@@ -17,7 +17,9 @@ public abstract class Money {
         this.currency = currency;
     }
 
-    abstract Money times(int multiplier);
+    Money times(int multiplier) {
+        return null;
+    };
 
     String currency() {
         return currency;
@@ -25,6 +27,10 @@ public abstract class Money {
 
     public boolean equals(Object object) {
         Money other = (Money) object;
-        return amount == other.amount && getClass() == other.getClass();
+        return amount == other.amount && currency.equals(other.currency);
+    }
+
+    public String toString() {
+        return amount + " " + currency;
     }
 }
