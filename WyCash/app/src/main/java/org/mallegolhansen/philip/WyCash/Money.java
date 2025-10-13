@@ -1,7 +1,13 @@
 package org.mallegolhansen.philip.WyCash;
 
-public class Money {
+public abstract class Money {
     protected int amount;
+
+    static Money dollar(int amount) {
+        return new Dollar(amount);
+    }
+
+    abstract Money times(int multiplier);
 
     public boolean equals(Object object) {
         Money other = (Money) object;
