@@ -35,21 +35,25 @@ class TestCase:
             method = getattr(self, self.name)
             method()
         except Exception:
-            result.testFailed()
+            result.testFailed(self.name)
         self.tearDown()
 
 class TestResult:
     def __init__(self):
         self.runCount = 0
         self.errorCount = 0
+        self.failed = []
 
     def testStarted(self):
         self.runCount += 1
 
-    def testFailed(self):
+    def testFailed(self, name):
         self.errorCount += 1
+        self.failed.append(name)
 
     def summary(self):
+        if self.errorCount > 0:
+            return f"{self.runCount} run, {self.errorCount} failed\n\nFailed:\n" + "\n".join(self.failed)
         return f"{self.runCount} run, {self.errorCount} failed"
 
 
@@ -95,19 +99,19 @@ class TestCaseTest(TestCase):
     def testFailedResult(self):
         test = WasRun("testBrokenMethod")
         test.run(self.result)
-        assert "1 run, 1 failed" == self.result.summary()
+        assert "1 run, 1 failed\n\nFailed:\ntestBrokenMethod" == self.result.summary()
 
     def testFailedResultFormatting(self):
         self.result.testStarted()
-        self.result.testFailed()
-        assert "1 run, 1 failed" == self.result.summary()
+        self.result.testFailed("testSomething")
+        assert "1 run, 1 failed\n\nFailed:\ntestSomething" == self.result.summary()
 
     def testSuite(self):
         suite = TestSuite()
         suite.add(WasRun("testMethod"))
         suite.add(WasRun("testBrokenMethod"))
         suite.run(self.result)
-        assert "2 run, 1 failed" == self.result.summary()
+        assert "2 run, 1 failed\n\nFailed:\ntestBrokenMethod" == self.result.summary()
 
     def testEquality(self):
         assert WasRun("testMethod") == WasRun("testMethod")
