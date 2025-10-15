@@ -1,12 +1,14 @@
-from unittest import result
-
-
 class TestSuite:
     def __init__(self):
         self.tests = []
 
     def add(self, test):
         self.tests.append(test)
+
+    def addClass(self, testClass):
+        testMethods = [method for method in dir(testClass) if callable(getattr(testClass, method)) and method.startswith("test")]
+        for method in testMethods:
+            self.add(testClass(method))
 
     def run(self, result):
         for test in self.tests:
@@ -16,6 +18,9 @@ class TestSuite:
 class TestCase:
     def __init__(self, name):
         self.name = name
+
+    def __eq__(self, other):
+        return isinstance(other, TestCase) and self.name == other.name
 
     def setUp(self):
         pass
@@ -65,6 +70,14 @@ class WasRun(TestCase):
         self.log += "tearDown "
 
 
+class TestSuiteTest(TestCase):
+    def testSuiteAddsFromClass(self):
+        suite = TestSuite()
+        suite.addClass(TestSuiteTest)
+        assert [TestSuiteTest("testSuiteAddsFromClass")] == suite.tests
+
+
+
 class TestCaseTest(TestCase):
     def setUp(self):
         self.result = TestResult()
@@ -96,14 +109,14 @@ class TestCaseTest(TestCase):
         suite.run(self.result)
         assert "2 run, 1 failed" == self.result.summary()
 
+    def testEquality(self):
+        assert WasRun("testMethod") == WasRun("testMethod")
+
 
 def main():
     suite = TestSuite()
-    suite.add(TestCaseTest("testTemplateMethod"))
-    suite.add(TestCaseTest("testBrokenMethod"))
-    suite.add(TestCaseTest("testFailedResult"))
-    suite.add(TestCaseTest("testFailedResultFormatting"))
-    suite.add(TestCaseTest("testSuite"))
+    suite.addClass(TestCaseTest)
+    suite.addClass(TestSuiteTest)
     result = TestResult()
     suite.run(result)
     print(result.summary())
